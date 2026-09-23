@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "🌴 Corn Island - Abrir en Chrome",
+            "type": "chrome",
+            "request": "launch",
+            "file": "${workspaceFolder}/index.html"
+        },
+        {
+            "name": "🌴 Corn Island - Live Server (Puerto 5500)",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://127.0.0.1:5500/index.html",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "name": "🌴 Corn Island - Live Server (Puerto 5501)",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://127.0.0.1:5501/index.html",
+            "webRoot": "${workspaceFolder}"
+        }
+    ]
+}

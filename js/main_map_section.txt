@@ -1,0 +1,111 @@
+﻿// ============================================================
+// MAPA INTERACTIVO DE NICARAGUA
+// ============================================================
+function initMap() {
+  const mapContainer = document.getElementById('nicaragua-map');
+  if (!mapContainer) return;
+
+  // Crear mapa SVG simplificado interactivo
+  const mapRegions = [
+    // Datos simplificados de posición de departamentos para el mapa
+    { id: 'chinandega', name: 'Chinandega', x: 60, y: 140, w: 80, h: 70, color: '#D62828' },
+    { id: 'leon', name: 'León', x: 100, y: 200, w: 90, h: 80, color: '#E63946' },
+    { id: 'managua', name: 'Managua', x: 170, y: 260, w: 70, h: 60, color: '#E76F51' },
+    { id: 'masaya', name: 'Masaya', x: 220, y: 300, w: 45, h: 40, color: '#F4A261' },
+    { id: 'granada', name: 'Granada', x: 240, y: 330, w: 55, h: 50, color: '#E9C46A' },
+    { id: 'carazo', name: 'Carazo', x: 185, y: 320, w: 50, h: 45, color: '#8ECAE6' },
+    { id: 'rivas', name: 'Rivas', x: 200, y: 360, w: 60, h: 70, color: '#52B788' },
+    { id: 'nueva-segovia', name: 'Nueva Segovia', x: 145, y: 60, w: 85, h: 70, color: '#344E41' },
+    { id: 'madriz', name: 'Madriz', x: 175, y: 120, w: 55, h: 50, color: '#588157' },
+    { id: 'esteli', name: 'Estelí', x: 205, y: 155, w: 60, h: 60, color: '#606C38' },
+    { id: 'jinotega', name: 'Jinotega', x: 250, y: 110, w: 85, h: 80, color: '#1B4332' },
+    { id: 'matagalpa', name: 'Matagalpa', x: 275, y: 190, w: 80, h: 75, color: '#386641' },
+    { id: 'boaco', name: 'Boaco', x: 310, y: 260, w: 65, h: 60, color: '#BC6C25' },
+    { id: 'chontales', name: 'Chontales', x: 345, y: 300, w: 75, h: 70, color: '#9C6644' },
+    { id: 'rio-san-juan', name: 'Río San Juan', x: 310, y: 370, w: 95, h: 75, color: '#0A7E3F' },
+    { id: 'costa-caribe-norte', name: 'Caribe Norte', x: 390, y: 90, w: 115, h: 160, color: '#0077B6' },
+    { id: 'costa-caribe-sur', name: 'Caribe Sur', x: 420, y: 260, w: 105, h: 185, color: '#00B4D8' },
+  ];
+
+  const svgWidth = 560;
+  const svgHeight = 470;
+
+  const svg = `
+    <svg viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg"
+         style="width:100%;height:auto;display:block" role="img" aria-label="Mapa interactivo de Nicaragua">
+      <rect width="${svgWidth}" height="${svgHeight}" fill="rgba(255,255,255,0.02)" rx="16"/>
+      <!-- Fondo de agua para el lago -->
+      <ellipse cx="280" cy="320" rx="60" ry="40" fill="rgba(0,119,182,0.3)" opacity="0.7"/>
+      <text x="280" y="325" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="8" font-family="Inter,sans-serif">Lago</text>
+      <text x="280" y="335" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="8" font-family="Inter,sans-serif">Cocibolca</text>
+
+      ${mapRegions.map(r => `
+        <g class="map-dept-group" data-dept="${r.id}" role="button" tabindex="0" aria-label="${r.name}">
+          <rect x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}"
+                rx="6" ry="6"
+                fill="${r.color}"
+                opacity="0.82"
+                stroke="rgba(255,255,255,0.4)"
+                stroke-width="0.8"
+                style="cursor:pointer;transition:opacity 0.2s,stroke-width 0.2s"
+                class="map-dept-rect"/>
+          <text x="${r.x + r.w/2}" y="${r.y + r.h/2}"
+                text-anchor="middle"
+                dominant-baseline="middle"
+                fill="white"
+                font-size="${r.w < 60 ? '7.5' : '9'}"
+                font-family="Inter,sans-serif"
+                font-weight="600"
+                style="pointer-events:none;text-shadow:0 1px 2px rgba(0,0,0,0.5)">
+            ${r.name.length > 14 ? r.name.split(' ').join('\n') : r.name}
+          </text>
+        </g>
+      `).join('')}
+
+      <!-- Leyenda -->
+      <g>
+        <rect x="10" y="430" width="12" height="12" rx="2" fill="rgba(0,119,182,0.7)"/>
+        <text x="26" y="440" fill="rgba(255,255,255,0.6)" font-size="9" font-family="Inter,sans-serif">Caribe</text>
+        <rect x="80" y="430" width="12" height="12" rx="2" fill="rgba(64,145,108,0.7)"/>
+        <text x="96" y="440" fill="rgba(255,255,255,0.6)" font-size="9" font-family="Inter,sans-serif">Centro</text>
+        <rect x="150" y="430" width="12" height="12" rx="2" fill="rgba(231,111,81,0.7)"/>
+        <text x="166" y="440" fill="rgba(255,255,255,0.6)" font-size="9" font-family="Inter,sans-serif">Pacífico</text>
+      </g>
+
+      <!-- Indicador de Norte -->
+      <text x="535" y="30" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="10" font-family="Inter,sans-serif">N</text>
+      <line x1="535" y1="15" x2="535" y2="35" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+    </svg>`;
+
+  mapContainer.innerHTML = svg;
+
+  // Interactividad del mapa
+  const infoPanel = document.getElementById('map-dept-info');
+
+  mapContainer.querySelectorAll('.map-dept-group').forEach(group => {
+    const deptId = group.dataset.dept;
+    const rect = group.querySelector('.map-dept-rect');
+
+    const handleEnter = () => {
+      rect?.setAttribute('opacity', '1');
+      rect?.setAttribute('stroke-width', '2');
+      rect?.setAttribute('stroke', 'white');
+      updateMapInfo(deptId, infoPanel);
+    };
+
+    const handleLeave = () => {
+      rect?.setAttribute('opacity', '0.82');
+      rect?.setAttribute('stroke-width', '0.8');
+      rect?.setAttribute('stroke', 'rgba(255,255,255,0.4)');
+    };
+
+    group.addEventListener('mouseenter', handleEnter);
+    group.addEventListener('mouseleave', handleLeave);
+    group.addEventListener('click', () => openDeptModal(deptId));
+    group.addEventListener('focus', handleEnter);
+    group.addEventListener('blur', handleLeave);
+    group.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') openDeptModal(deptId);
+    });
+  });
+}
